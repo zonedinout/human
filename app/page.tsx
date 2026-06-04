@@ -1,84 +1,86 @@
 "use client";
 
+import { useState } from "react";
 import { motion } from "framer-motion";
-import { useHealthStore } from "@/lib/store";
 import Header from "@/components/Header";
 import StatusBar from "@/components/StatusBar";
 import DigitalTwin from "@/components/DigitalTwin";
 import VitalSystems from "@/components/VitalSystems";
 import DailyObjective from "@/components/DailyObjective";
 import AICoach from "@/components/AICoach";
-import PredictionEngine from "@/components/PredictionEngine";
 import LogPanel from "@/components/LogPanel";
+import PredictionEngine from "@/components/PredictionEngine";
+import { useHealthStore } from "@/lib/store";
 
-export default function Home() {
+export default function Page() {
+  const [projected, setProjected] = useState<number | null>(null);
   const overallScore = useHealthStore((s) => s.overallScore);
 
   return (
-    <div className="min-h-screen bg-[#050a0e] grid-bg relative">
-      {/* Header */}
-      <div className="sticky top-0 z-40">
+    <div className="min-h-screen grid-bg relative">
+      {/* Sticky header group */}
+      <div className="sticky top-0 z-30">
         <Header />
         <StatusBar />
       </div>
 
-      {/* Main content */}
-      <main className="max-w-[1400px] mx-auto px-4 py-6 pb-24">
-        {/* 3-column grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px_1fr] gap-5 mb-5">
-          {/* Left — vital systems top 4 */}
+      {/* Main 3-column layout */}
+      <div className="max-w-[1400px] mx-auto px-4 py-6">
+        <div className="grid grid-cols-1 lg:grid-cols-[280px_1fr_280px] gap-5 mb-6">
+          {/* Left column — VitalSystems top 4 */}
           <motion.div
             initial={{ opacity: 0, x: -30 }}
             animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6, delay: 0.1 }}
+            transition={{ delay: 0.1, duration: 0.7 }}
           >
-            <div className="font-mono text-[9px] tracking-[0.3em] text-[#334455] mb-3 uppercase">
-              Vital Systems — Primary
-            </div>
             <VitalSystems slice={[0, 4]} />
           </motion.div>
 
-          {/* Center — digital twin */}
+          {/* Center column — Digital Twin + Objective */}
           <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.7, delay: 0.2 }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2, duration: 0.7 }}
             className="flex flex-col items-center gap-5"
           >
-            {/* Score ring */}
+            {/* Twin container */}
             <div
-              className="glass-card-elevated corner-brackets p-6 w-full flex flex-col items-center gap-2"
-              style={{ boxShadow: "0 0 60px rgba(0,212,255,0.06)" }}
+              className="glass-card-elevated corner-brackets w-full flex items-center justify-center py-8 px-4 relative overflow-hidden"
+              style={{ minHeight: 360 }}
             >
-              <DigitalTwin score={overallScore} />
+              {/* Background hex grid */}
+              <div
+                className="absolute inset-0 opacity-20"
+                style={{
+                  backgroundImage: `radial-gradient(circle at center, rgba(0,212,255,0.08) 0%, transparent 70%)`,
+                }}
+              />
+              <DigitalTwin score={overallScore} projected={projected ?? undefined} />
             </div>
 
-            {/* Daily objective */}
-            <DailyObjective />
+            {/* Daily Objective */}
+            <div className="w-full">
+              <DailyObjective />
+            </div>
           </motion.div>
 
-          {/* Right — vital systems bottom 4 + AI coach */}
+          {/* Right column — VitalSystems bottom 4 + AICoach */}
           <motion.div
             initial={{ opacity: 0, x: 30 }}
             animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6, delay: 0.1 }}
+            transition={{ delay: 0.3, duration: 0.7 }}
             className="flex flex-col gap-5"
           >
-            <div>
-              <div className="font-mono text-[9px] tracking-[0.3em] text-[#334455] mb-3 uppercase">
-                Vital Systems — Secondary
-              </div>
-              <VitalSystems slice={[4, 8]} />
-            </div>
+            <VitalSystems slice={[4, 8]} />
             <AICoach />
           </motion.div>
         </div>
 
-        {/* Prediction engine — full width */}
-        <PredictionEngine />
-      </main>
+        {/* Prediction Engine — full width */}
+        <PredictionEngine onProject={setProjected} />
+      </div>
 
-      {/* Floating log button */}
+      {/* Floating log panel */}
       <LogPanel />
     </div>
   );
