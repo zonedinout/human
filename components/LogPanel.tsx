@@ -2,10 +2,10 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Plus, Moon, Scale, Dumbbell, Utensils, Droplets, type LucideIcon } from "lucide-react";
+import { X, Plus, Moon, Scale, Dumbbell, Utensils, Droplets, Coffee, type LucideIcon } from "lucide-react";
 import { useHealthStore } from "@/lib/store";
 
-type Tab = "SLEEP" | "WEIGHT" | "TRAINING" | "NUTRITION" | "HYDRATION";
+type Tab = "SLEEP" | "WEIGHT" | "TRAINING" | "NUTRITION" | "HYDRATION" | "WELLBEING";
 
 const HOURS = Array.from({ length: 24 }, (_, i) => String(i).padStart(2, "0"));
 const MINUTES = ["00", "15", "30", "45"];
@@ -254,12 +254,103 @@ function HydrationTab({ onDone }: { onDone: () => void }) {
   );
 }
 
+function WellbeingTab({ onDone }: { onDone: () => void }) {
+  const logCaffeine = useHealthStore(s => s.logCaffeine);
+  const logSubjectiveStress = useHealthStore(s => s.logSubjectiveStress);
+  const caffeineLevel = useHealthStore(s => s.caffeineLevel);
+  const subjectiveStress = useHealthStore(s => s.subjectiveStress);
+
+  const CAFFEINE = [
+    { level: 0, label: "NONE",   sub: "No caffeine" },
+    { level: 1, label: "1 CUP",  sub: "Coffee / tea" },
+    { level: 2, label: "2–3",    sub: "Moderate load" },
+    { level: 3, label: "4+",     sub: "High load" },
+  ];
+
+  const STRESS_LEVELS = [
+    { level: 1, label: "CALM",     color: "#00ff88" },
+    { level: 2, label: "MILD",     color: "#88ff00" },
+    { level: 3, label: "MODERATE", color: "#ffaa00" },
+    { level: 4, label: "HIGH",     color: "#ff6600" },
+    { level: 5, label: "MAXED",    color: "#ff3366" },
+  ];
+
+  return (
+    <div className="flex flex-col gap-6">
+      {/* Caffeine */}
+      <div>
+        <div className="font-mono text-[9px] tracking-[0.25em] text-[#445566] mb-1">CAFFEINE INTAKE TODAY</div>
+        <div className="font-mono text-[8px] text-[#334455] tracking-widest mb-3">
+          Affects cortisol, sleep quality, and stress score
+        </div>
+        <div className="grid grid-cols-4 gap-2">
+          {CAFFEINE.map(c => (
+            <motion.button
+              key={c.level}
+              onClick={() => logCaffeine(c.level)}
+              whileHover={{ scale: 1.04 }}
+              whileTap={{ scale: 0.96 }}
+              className="py-3 flex flex-col items-center gap-1 transition-all"
+              style={{
+                border: `1px solid ${caffeineLevel === c.level ? "#ffaa00" : "#1a2a3a"}`,
+                background: caffeineLevel === c.level ? "rgba(255,170,0,0.12)" : "rgba(8,15,20,0.6)",
+                boxShadow: caffeineLevel === c.level ? "0 0 12px rgba(255,170,0,0.2)" : "none",
+              }}
+            >
+              <span className="font-mono text-xs font-bold" style={{ color: caffeineLevel === c.level ? "#ffaa00" : "#667788" }}>
+                {c.label}
+              </span>
+              <span className="font-mono text-[8px] text-[#334455]">{c.sub}</span>
+            </motion.button>
+          ))}
+        </div>
+      </div>
+
+      {/* Subjective stress */}
+      <div>
+        <div className="font-mono text-[9px] tracking-[0.25em] text-[#445566] mb-1">HOW STRESSED DO YOU FEEL?</div>
+        <div className="font-mono text-[8px] text-[#334455] tracking-widest mb-3">
+          Blended 50/50 with biological stress signals
+        </div>
+        <div className="flex gap-2">
+          {STRESS_LEVELS.map(s => (
+            <motion.button
+              key={s.level}
+              onClick={() => logSubjectiveStress(s.level)}
+              whileHover={{ scale: 1.06 }}
+              whileTap={{ scale: 0.94 }}
+              className="flex-1 py-3 flex flex-col items-center gap-1 transition-all"
+              style={{
+                border: `1px solid ${subjectiveStress === s.level ? s.color : "#1a2a3a"}`,
+                background: subjectiveStress === s.level ? `${s.color}18` : "rgba(8,15,20,0.6)",
+                boxShadow: subjectiveStress === s.level ? `0 0 12px ${s.color}33` : "none",
+              }}
+            >
+              <span className="font-mono text-sm font-bold" style={{ color: subjectiveStress === s.level ? s.color : "#334455" }}>
+                {s.level}
+              </span>
+              <span className="font-mono text-[7px]" style={{ color: subjectiveStress === s.level ? s.color : "#334455" }}>
+                {s.label}
+              </span>
+            </motion.button>
+          ))}
+        </div>
+      </div>
+
+      <div className="font-mono text-[8px] text-[#223344] tracking-widest text-center leading-relaxed">
+        Stress score updates live. Too much coffee = cortisol spike = lower recovery.
+      </div>
+    </div>
+  );
+}
+
 const TABS: { id: Tab; label: string; Icon: LucideIcon }[] = [
-  { id: "SLEEP",     label: "SLEEP",     Icon: Moon },
-  { id: "HYDRATION", label: "WATER",     Icon: Droplets },
-  { id: "TRAINING",  label: "TRAIN",     Icon: Dumbbell },
-  { id: "NUTRITION", label: "FOOD",      Icon: Utensils },
-  { id: "WEIGHT",    label: "WEIGHT",    Icon: Scale },
+  { id: "SLEEP",     label: "SLEEP",  Icon: Moon },
+  { id: "HYDRATION", label: "WATER",  Icon: Droplets },
+  { id: "TRAINING",  label: "TRAIN",  Icon: Dumbbell },
+  { id: "NUTRITION", label: "FOOD",   Icon: Utensils },
+  { id: "WELLBEING", label: "STRESS", Icon: Coffee },
+  { id: "WEIGHT",    label: "WEIGHT", Icon: Scale },
 ];
 
 export default function LogPanel() {
@@ -334,6 +425,7 @@ export default function LogPanel() {
                     {tab === "TRAINING"  && <TrainingTab  onDone={() => setOpen(false)} />}
                     {tab === "NUTRITION" && <NutritionTab onDone={() => setOpen(false)} />}
                     {tab === "HYDRATION" && <HydrationTab onDone={() => setOpen(false)} />}
+                    {tab === "WELLBEING" && <WellbeingTab onDone={() => setOpen(false)} />}
                   </motion.div>
                 </AnimatePresence>
               </div>

@@ -47,6 +47,25 @@ function analyseState(): string[] {
   if (s.hydration > 85)   msgs.push("Hydration optimal. Cognitive performance sustained.");
   if (s.sleep > 85)       msgs.push("Sleep quality optimal. HRV likely elevated.");
 
+  // Caffeine
+  if (s.caffeineLevel >= 3) msgs.push("High caffeine load. Cortisol elevated. Recovery impaired.");
+  else if (s.caffeineLevel === 2) msgs.push("Moderate caffeine. Monitor sleep onset tonight.");
+
+  // Subjective stress
+  if (s.subjectiveStress !== null) {
+    if (s.subjectiveStress >= 4) msgs.push("High subjective stress reported. Prioritise recovery.");
+    else if (s.subjectiveStress <= 2) msgs.push("Subjective stress low. System well-regulated.");
+  }
+
+  // Consecutive training
+  const consec = s.consecutiveTrainingDays;
+  if (consec >= 5) msgs.push(`${consec} consecutive training days. Deload required.`);
+  else if (consec >= 3) msgs.push(`${consec} days straight. Monitor recovery closely.`);
+
+  // Sleep debt
+  if (s.sleepDebt > 4) msgs.push(`${s.sleepDebt.toFixed(1)}h sleep debt accumulated. Prioritise tonight.`);
+  else if (s.sleepDebt > 2) msgs.push(`${s.sleepDebt.toFixed(1)}h sleep debt building.`);
+
   // Profile-based
   if (profile) {
     if (profile.goal === "performance" && s.nutrition < 70)
