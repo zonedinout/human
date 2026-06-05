@@ -11,6 +11,7 @@ import DailyObjective from "@/components/DailyObjective";
 import AICoach from "@/components/AICoach";
 import PredictionEngine from "@/components/PredictionEngine";
 import CircadianTimeline from "@/components/CircadianTimeline";
+import NutritionProtocol from "@/components/NutritionProtocol";
 import LogPanel from "@/components/LogPanel";
 import Onboarding from "@/components/Onboarding";
 
@@ -161,7 +162,12 @@ export default function Page() {
           <CircadianTimeline />
         </div>
 
-        {/* ── Row 3: Prediction Engine ── */}
+        {/* ── Row 3: Nutrition Protocol ── */}
+        <div className="mb-5">
+          <NutritionProtocol />
+        </div>
+
+        {/* ── Row 4: Prediction Engine ── */}
         <PredictionEngine onProject={setProjected} />
 
         {/* Dev reset */}

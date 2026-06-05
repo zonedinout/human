@@ -12,7 +12,7 @@ import {
 } from "./bioEngine";
 
 export type { UserProfile };
-export type { Sex, ActivityLevel, Goal } from "./bioEngine";
+export type { Sex, ActivityLevel, Goal, DietaryStyle, Allergy } from "./bioEngine";
 
 export interface SleepLog {
   bedtime: string;
