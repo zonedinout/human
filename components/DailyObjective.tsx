@@ -18,8 +18,9 @@ const OBJECTIVES: Record<string, { action: string; desc: string; impact: number 
 export default function DailyObjective() {
   const state = useHealthStore();
 
-  const lowestKey = (["hydration", "sleep", "recovery", "nutrition", "movement", "energy", "focus", "stress"] as const)
-    .sort((a, b) => state[a] - state[b])[0];
+  const keys = ["hydration", "sleep", "recovery", "nutrition", "movement", "energy", "focus", "stress"] as const;
+  type ScoreKey = typeof keys[number];
+  const lowestKey: ScoreKey = [...keys].sort((a, b) => state[a] - state[b])[0];
 
   const obj = OBJECTIVES[lowestKey];
   const value = state[lowestKey];

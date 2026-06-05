@@ -2,12 +2,12 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { FlaskConical, TrendingUp, Moon, Beef, Zap } from "lucide-react";
+import { FlaskConical, TrendingUp, Moon, Beef, Zap, type LucideIcon } from "lucide-react";
 import { useHealthStore } from "@/lib/store";
 
 interface Scenario {
   id: string;
-  icon: React.ComponentType<{ size?: number; color?: string }>;
+  icon: LucideIcon;
   label: string;
   description: string;
   calcDelta: (state: ReturnType<typeof useHealthStore.getState>) => number;

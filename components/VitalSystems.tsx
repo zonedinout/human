@@ -3,7 +3,7 @@
 import { motion } from "framer-motion";
 import {
   Heart, Droplets, Utensils, Activity,
-  Moon, Zap, Brain, Wind
+  Moon, Zap, Brain, Wind, type LucideIcon
 } from "lucide-react";
 import { useHealthStore } from "@/lib/store";
 
@@ -37,7 +37,7 @@ function barColor(v: number) {
 function SystemCard({ systemKey, label, Icon, index }: {
   systemKey: SystemKey;
   label: string;
-  Icon: React.ComponentType<{ size?: number; color?: string }>;
+  Icon: LucideIcon;
   index: number;
 }) {
   const value = useHealthStore((s) => s[systemKey]);

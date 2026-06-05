@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Plus, Moon, Scale, Dumbbell, Utensils } from "lucide-react";
+import { X, Plus, Moon, Scale, Dumbbell, Utensils, type LucideIcon } from "lucide-react";
 import { useHealthStore } from "@/lib/store";
 
 type Tab = "SLEEP" | "WEIGHT" | "TRAINING" | "NUTRITION";
@@ -236,7 +236,7 @@ function NutritionTab({ onDone }: { onDone: () => void }) {
   );
 }
 
-const TABS: { id: Tab; label: string; icon: React.ComponentType<{ size?: number; color?: string }> }[] = [
+const TABS: { id: Tab; label: string; icon: LucideIcon }[] = [
   { id: "SLEEP", label: "SLEEP", icon: Moon },
   { id: "WEIGHT", label: "WEIGHT", icon: Scale },
   { id: "TRAINING", label: "TRAINING", icon: Dumbbell },
