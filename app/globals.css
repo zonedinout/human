@@ -5,12 +5,16 @@
 @tailwind utilities;
 
 :root {
-  --bg-primary:   #050a0e;
-  --bg-secondary: #080f14;
-  --accent-cyan:  #00d4ff;
-  --accent-green: #00ff88;
-  --accent-amber: #ffaa00;
-  --accent-red:   #ff3366;
+  --bg-primary:   #070510;
+  --bg-secondary: #0a0718;
+  --accent-teal:  #4dd0c4;
+  --accent-violet:#9b7fd4;
+  --accent-amber: #d4956b;
+  --accent-rose:  #c46b7a;
+  /* legacy compat */
+  --accent-cyan:  #4dd0c4;
+  --accent-green: #4dd0c4;
+  --accent-red:   #c46b7a;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -51,6 +55,16 @@ html, body {
     linear-gradient(90deg, rgba(0, 212, 255, 0.025) 1px, transparent 1px);
   background-size: 40px 40px;
   background-position: center center;
+}
+
+/* ── Cosmic card (dashboard) ─────────────────────────────────────────────── */
+.cosmic-card {
+  background: rgba(10, 7, 22, 0.75);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 12px;
+  transition: border-color 0.3s, box-shadow 0.3s;
 }
 
 /* ── Glass cards ─────────────────────────────────────────────────────────── */

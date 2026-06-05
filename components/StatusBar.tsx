@@ -5,13 +5,12 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useHealthStore } from "@/lib/store";
 
 const MESSAGES = [
-  "SYSTEM OPTIMAL — ALL SUBSYSTEMS NOMINAL",
-  "PROCESSING BIOMETRIC DATA...",
-  "NEURAL SYNC COMPLETE",
-  "RUNNING PREDICTIVE ANALYSIS...",
-  "HEALTH VECTORS CALIBRATED",
-  "MONITORING ACTIVE — 847 DATAPOINTS/MIN",
-  "RECOVERY PROTOCOLS ENGAGED",
+  "All systems calibrated.",
+  "Processing biometric data...",
+  "Recovery protocols active.",
+  "Monitoring circadian rhythms.",
+  "Predictive analysis running.",
+  "Health vectors in sync.",
 ];
 
 export default function StatusBar() {
@@ -19,51 +18,48 @@ export default function StatusBar() {
   const [msgIndex, setMsgIndex] = useState(0);
 
   useEffect(() => {
-    const id = setInterval(() => {
-      setMsgIndex((i) => (i + 1) % MESSAGES.length);
-    }, 4000);
+    const id = setInterval(() => setMsgIndex((i) => (i + 1) % MESSAGES.length), 5000);
     return () => clearInterval(id);
   }, []);
 
-  const statusColor =
-    overallScore >= 80 ? "#00ff88" : overallScore >= 50 ? "#ffaa00" : "#ff3366";
-  const statusText =
-    overallScore >= 80 ? "SYSTEM OPTIMAL" : overallScore >= 50 ? "MONITORING" : "ALERT";
+  const scoreColor =
+    overallScore >= 80 ? "#4dd0c4" : overallScore >= 60 ? "#9b7fd4" : overallScore >= 40 ? "#d4956b" : "#c46b7a";
 
   return (
     <div
-      className="flex items-center justify-between px-6 py-1.5 border-b border-[#0a1520]"
-      style={{ background: "rgba(8,15,20,0.9)", fontSize: "10px" }}
+      className="flex items-center justify-between px-6 py-1.5"
+      style={{
+        background: "rgba(7,5,16,0.7)",
+        borderBottom: "1px solid rgba(255,255,255,0.04)",
+        backdropFilter: "blur(12px)",
+      }}
     >
-      {/* Left */}
       <div className="flex items-center gap-3">
-        <span
-          className="font-mono tracking-widest"
-          style={{ color: statusColor, textShadow: `0 0 8px ${statusColor}88` }}
-        >
-          ● {statusText}
-        </span>
-        <span className="font-mono text-[#1a2a3a]">│</span>
+        <div
+          className="w-1 h-1 rounded-full"
+          style={{ background: scoreColor, boxShadow: `0 0 4px ${scoreColor}` }}
+        />
         <AnimatePresence mode="wait">
           <motion.span
             key={msgIndex}
-            initial={{ opacity: 0, x: 10 }}
+            initial={{ opacity: 0, x: 8 }}
             animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -10 }}
-            transition={{ duration: 0.4 }}
-            className="font-mono text-[#445566] tracking-widest"
+            exit={{ opacity: 0, x: -8 }}
+            transition={{ duration: 0.5 }}
+            style={{ fontFamily: "'Inter', sans-serif", fontWeight: 300, fontSize: "0.65rem", letterSpacing: "0.05em", color: "rgba(255,255,255,0.2)" }}
           >
             {MESSAGES[msgIndex]}
           </motion.span>
         </AnimatePresence>
       </div>
 
-      {/* Right */}
-      <div className="flex items-center gap-4 font-mono text-[#334455] tracking-widest">
-        <span>CPU: <span className="text-[#00d4ff]">12%</span></span>
-        <span>MEM: <span className="text-[#00d4ff]">2.1GB</span></span>
-        <span>NET: <span className="text-[#00ff88]">SECURE</span></span>
-        <span>BUILD <span className="text-[#00d4ff]">2025.06.04</span></span>
+      <div className="flex items-center gap-2">
+        <span style={{ fontFamily: "'Inter', sans-serif", fontWeight: 300, fontSize: "0.65rem", color: "rgba(255,255,255,0.15)", letterSpacing: "0.05em" }}>
+          score
+        </span>
+        <span style={{ fontFamily: "'Inter', sans-serif", fontWeight: 400, fontSize: "0.65rem", color: scoreColor, letterSpacing: "0.05em" }}>
+          {overallScore}
+        </span>
       </div>
     </div>
   );

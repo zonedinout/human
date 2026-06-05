@@ -14,6 +14,7 @@ import CircadianTimeline from "@/components/CircadianTimeline";
 import NutritionProtocol from "@/components/NutritionProtocol";
 import LogPanel from "@/components/LogPanel";
 import Onboarding from "@/components/Onboarding";
+import CosmicBg from "@/components/CosmicBg";
 
 export default function Page() {
   const [projected, setProjected] = useState<number | null>(null);
@@ -27,14 +28,14 @@ export default function Page() {
 
   if (!isOnboarded) return <Onboarding />;
 
-  const recoveryColor = recovery >= 70 ? "#00ff88" : recovery >= 50 ? "#ffaa00" : "#ff3366";
-  const projColor     = projectedRecovery >= 70 ? "#00ff88" : "#ffaa00";
+  const recoveryColor = recovery >= 80 ? "#4dd0c4" : recovery >= 60 ? "#9b7fd4" : recovery >= 40 ? "#d4956b" : "#c46b7a";
+  const projColor     = projectedRecovery >= 70 ? "#4dd0c4" : "#d4956b";
 
   return (
-    <div className="min-h-screen grid-bg relative">
-      {/* Scanline overlay */}
-      <div className="scanline-overlay" />
+    <div className="min-h-screen relative" style={{ background: "#070510" }}>
+      <CosmicBg />
 
+      <div className="relative z-10 flex flex-col min-h-screen">
       <div className="sticky top-0 z-30">
         <Header />
         <StatusBar />
@@ -62,12 +63,12 @@ export default function Page() {
             className="flex flex-col items-center gap-5"
           >
             <div
-              className="glass-card-elevated corner-brackets w-full flex items-center justify-center py-8 px-4 relative overflow-hidden"
+              className="cosmic-card w-full flex items-center justify-center py-8 px-4 relative overflow-hidden"
               style={{ minHeight: 340 }}
             >
-              {/* Ambient background glow */}
-              <div className="absolute inset-0 opacity-30 pointer-events-none"
-                style={{ backgroundImage: "radial-gradient(circle at 50% 40%, rgba(0,212,255,0.06) 0%, transparent 70%)" }}
+              {/* Ambient glow */}
+              <div className="absolute inset-0 pointer-events-none"
+                style={{ backgroundImage: "radial-gradient(circle at 50% 40%, rgba(155,127,212,0.05) 0%, transparent 70%)" }}
               />
 
               <div className="flex flex-col items-center gap-5 w-full relative">
@@ -76,28 +77,26 @@ export default function Page() {
                 {/* Stats row */}
                 <div className="flex items-center gap-5 w-full justify-center">
                   <div className="text-center">
-                    <div className="font-mono text-[8px] text-[#2a3a48] tracking-[0.25em] mb-1">RECOVERY</div>
+                    <div style={{ fontFamily: "'Inter', sans-serif", fontWeight: 300, fontSize: "0.55rem", letterSpacing: "0.18em", color: "rgba(255,255,255,0.2)", textTransform: "uppercase", marginBottom: "0.25rem" }}>recovery</div>
                     <motion.div
                       key={recovery}
                       initial={{ opacity: 0, y: -4 }}
                       animate={{ opacity: 1, y: 0 }}
-                      className="font-mono text-xl font-bold"
-                      style={{ color: recoveryColor, textShadow: `0 0 12px ${recoveryColor}66` }}
+                      style={{ fontFamily: "'Inter', sans-serif", fontWeight: 300, fontSize: "1.2rem", letterSpacing: "-0.01em", color: recoveryColor, textShadow: `0 0 12px ${recoveryColor}55` }}
                     >
                       {recovery}%
                     </motion.div>
                   </div>
 
-                  <div className="font-mono text-[#0d1e2a] text-xl">→</div>
+                  <div style={{ color: "rgba(255,255,255,0.1)", fontSize: "1rem" }}>→</div>
 
                   <div className="text-center">
-                    <div className="font-mono text-[8px] text-[#2a3a48] tracking-[0.25em] mb-1">PROJECTED</div>
+                    <div style={{ fontFamily: "'Inter', sans-serif", fontWeight: 300, fontSize: "0.55rem", letterSpacing: "0.18em", color: "rgba(255,255,255,0.2)", textTransform: "uppercase", marginBottom: "0.25rem" }}>projected</div>
                     <motion.div
                       key={projectedRecovery}
                       initial={{ opacity: 0, y: -4 }}
                       animate={{ opacity: 1, y: 0 }}
-                      className="font-mono text-xl font-bold"
-                      style={{ color: projColor, textShadow: `0 0 12px ${projColor}66` }}
+                      style={{ fontFamily: "'Inter', sans-serif", fontWeight: 300, fontSize: "1.2rem", letterSpacing: "-0.01em", color: projColor, textShadow: `0 0 12px ${projColor}55` }}
                     >
                       {projectedRecovery}%
                     </motion.div>
@@ -105,15 +104,14 @@ export default function Page() {
 
                   {sleepDebt > 0 && (
                     <>
-                      <div className="font-mono text-[#0d1e2a] text-xl">│</div>
+                      <div style={{ color: "rgba(255,255,255,0.08)", fontSize: "1rem" }}>│</div>
                       <div className="text-center">
-                        <div className="font-mono text-[8px] text-[#2a3a48] tracking-[0.25em] mb-1">SLEEP DEBT</div>
+                        <div style={{ fontFamily: "'Inter', sans-serif", fontWeight: 300, fontSize: "0.55rem", letterSpacing: "0.18em", color: "rgba(255,255,255,0.2)", textTransform: "uppercase", marginBottom: "0.25rem" }}>sleep debt</div>
                         <motion.div
                           key={sleepDebt}
                           initial={{ opacity: 0, y: -4 }}
                           animate={{ opacity: 1, y: 0 }}
-                          className="font-mono text-xl font-bold"
-                          style={{ color: sleepDebt > 1.5 ? "#ff3366" : "#ffaa00" }}
+                          style={{ fontFamily: "'Inter', sans-serif", fontWeight: 300, fontSize: "1.2rem", letterSpacing: "-0.01em", color: sleepDebt > 1.5 ? "#c46b7a" : "#d4956b" }}
                         >
                           {sleepDebt.toFixed(1)}h
                         </motion.div>
@@ -123,15 +121,14 @@ export default function Page() {
 
                   {hrv !== null && (
                     <>
-                      <div className="font-mono text-[#0d1e2a] text-xl">│</div>
+                      <div style={{ color: "rgba(255,255,255,0.08)", fontSize: "1rem" }}>│</div>
                       <div className="text-center">
-                        <div className="font-mono text-[8px] text-[#2a3a48] tracking-[0.25em] mb-1">HRV</div>
+                        <div style={{ fontFamily: "'Inter', sans-serif", fontWeight: 300, fontSize: "0.55rem", letterSpacing: "0.18em", color: "rgba(255,255,255,0.2)", textTransform: "uppercase", marginBottom: "0.25rem" }}>HRV</div>
                         <motion.div
                           key={hrv}
                           initial={{ opacity: 0, y: -4 }}
                           animate={{ opacity: 1, y: 0 }}
-                          className="font-mono text-xl font-bold"
-                          style={{ color: hrv > 70 ? "#00ff88" : hrv > 50 ? "#ffaa00" : "#ff3366" }}
+                          style={{ fontFamily: "'Inter', sans-serif", fontWeight: 300, fontSize: "1.2rem", letterSpacing: "-0.01em", color: hrv! > 70 ? "#4dd0c4" : hrv! > 50 ? "#d4956b" : "#c46b7a" }}
                         >
                           {hrv}ms
                         </motion.div>
@@ -174,14 +171,17 @@ export default function Page() {
         <div className="flex justify-center mt-8">
           <button
             onClick={resetOnboarding}
-            className="font-mono text-[8px] text-[#1a2a3a] hover:text-[#334455] tracking-widest transition-colors"
+            style={{ fontFamily: "'Inter', sans-serif", fontWeight: 300, fontSize: "0.55rem", color: "rgba(255,255,255,0.08)", letterSpacing: "0.15em", background: "none", border: "none", cursor: "pointer", transition: "color 0.3s" }}
+            onMouseEnter={e => (e.currentTarget.style.color = "rgba(255,255,255,0.22)")}
+            onMouseLeave={e => (e.currentTarget.style.color = "rgba(255,255,255,0.08)")}
           >
-            RESET PROFILE
+            reset profile
           </button>
         </div>
       </div>
 
       <LogPanel />
+      </div>
     </div>
   );
 }

@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Clock, Coffee, Zap } from "lucide-react";
+import { Coffee } from "lucide-react";
 import {
   CIRCADIAN_PHASES,
   getCurrentPhase,
@@ -19,7 +19,6 @@ function fmt(mins: number): string {
   return h > 0 ? `${h}h ${String(m).padStart(2, "0")}m` : `${m}m`;
 }
 
-// Window: 5am → 5am next day (24h)
 const WIN_START = 5;
 const WIN_TOTAL = 24;
 
@@ -41,36 +40,29 @@ function PhaseSegment({ phase, isActive }: { phase: CircadianPhase; isActive: bo
       className="relative h-full flex items-center justify-center overflow-hidden"
       style={{
         width: `${width}%`,
-        background: isActive ? `${phase.color}28` : `${phase.color}09`,
-        borderRight: `1px solid ${phase.color}18`,
-        borderTop: isActive ? `2px solid ${phase.color}` : "2px solid transparent",
+        background: isActive ? `${phase.color}22` : `${phase.color}07`,
+        borderRight: `1px solid rgba(255,255,255,0.04)`,
         flexShrink: 0,
       }}
-      animate={{
-        background: isActive ? `${phase.color}28` : `${phase.color}09`,
-      }}
-      transition={{ duration: 0.6 }}
+      animate={{ background: isActive ? `${phase.color}22` : `${phase.color}07` }}
+      transition={{ duration: 0.8 }}
     >
       {isActive && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          className="absolute inset-0 flex items-center justify-center px-1"
-        >
-          <span
-            className="font-mono text-[6px] tracking-widest truncate text-center"
-            style={{ color: phase.color }}
+        <>
+          <div
+            className="absolute top-0 left-0 right-0 h-px"
+            style={{ background: `linear-gradient(90deg, transparent, ${phase.color}88, transparent)` }}
+          />
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="absolute inset-0 flex items-center justify-center px-1"
           >
-            {phase.name}
-          </span>
-        </motion.div>
-      )}
-      {/* Glow for active */}
-      {isActive && (
-        <div
-          className="absolute inset-0 pointer-events-none"
-          style={{ background: `linear-gradient(180deg, ${phase.color}18 0%, transparent 100%)` }}
-        />
+            <span style={{ fontFamily: "'Inter', sans-serif", fontWeight: 300, fontSize: "0.5rem", letterSpacing: "0.08em", color: `${phase.color}bb`, textTransform: "uppercase" }}>
+              {phase.name}
+            </span>
+          </motion.div>
+        </>
       )}
     </motion.div>
   );
@@ -105,48 +97,42 @@ export default function CircadianTimeline() {
     return () => clearInterval(id);
   }, [caffeineLevel, caffeineLoggedAt]);
 
-  const CAFFEINE_LABELS = ["NONE", "LOW", "MODERATE", "HIGH"];
-  const CAFFEINE_COLORS = ["#445566", "#00ff88", "#ffaa00", "#ff3366"];
+  const CAFFEINE_LABELS = ["none", "low", "moderate", "high"];
+  const CAFFEINE_COLORS = ["rgba(255,255,255,0.2)", "#4dd0c4", "#d4956b", "#c46b7a"];
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 24 }}
+      initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.55, duration: 0.7 }}
-      className="glass-card corner-brackets p-4 w-full"
-      style={{ borderColor: `${phase.color}33`, boxShadow: `0 0 40px ${phase.color}08` }}
+      className="cosmic-card p-4 w-full"
     >
-      {/* ── Header ── */}
-      <div className="flex items-center justify-between mb-3">
+      {/* Header */}
+      <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
-          <Clock size={11} color={phase.color} />
-          <span className="font-mono text-[9px] tracking-[0.3em] text-[#445566]">CIRCADIAN TIMELINE</span>
+          <div className="w-1.5 h-1.5 rounded-full" style={{ background: phase.color }} />
+          <span style={{ fontFamily: "'Inter', sans-serif", fontWeight: 300, fontSize: "0.65rem", letterSpacing: "0.12em", color: "rgba(255,255,255,0.3)", textTransform: "uppercase" }}>
+            circadian
+          </span>
         </div>
         <div className="flex items-center gap-4">
           {clearanceMins !== null && clearanceMins > 0 && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              className="flex items-center gap-1.5"
-            >
-              <Coffee size={9} color="#ffaa00" />
-              <span className="font-mono text-[8px] text-[#ffaa00] tracking-widest">
-                CAFFEINE CLEARS {fmt(clearanceMins)}
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex items-center gap-1.5">
+              <Coffee size={9} color="#d4956b" strokeWidth={1.5} />
+              <span style={{ fontFamily: "'Inter', sans-serif", fontWeight: 300, fontSize: "0.6rem", color: "#d4956b", letterSpacing: "0.05em" }}>
+                caffeine clears in {fmt(clearanceMins)}
               </span>
             </motion.div>
           )}
-          <div className="flex items-center gap-1.5">
-            <Zap size={9} color={phase.color} />
-            <span className="font-mono text-[8px] tracking-widest" style={{ color: `${phase.color}aa` }}>
-              NEXT PHASE {fmt(minsLeft)}
-            </span>
-          </div>
+          <span style={{ fontFamily: "'Inter', sans-serif", fontWeight: 300, fontSize: "0.6rem", color: `${phase.color}77`, letterSpacing: "0.05em" }}>
+            next phase {fmt(minsLeft)}
+          </span>
         </div>
       </div>
 
-      {/* ── Timeline bar ── */}
+      {/* Timeline bar */}
       <div className="relative mb-1">
-        <div className="flex h-10 rounded-[2px] overflow-hidden border border-[#0d1e2a]">
+        <div className="flex h-9 overflow-hidden" style={{ borderRadius: "6px", border: "1px solid rgba(255,255,255,0.04)" }}>
           {CIRCADIAN_PHASES.map(p => (
             <PhaseSegment key={p.id} phase={p} isActive={p.id === phase.id} />
           ))}
@@ -159,84 +145,75 @@ export default function CircadianTimeline() {
           animate={{ left: `${cursorPct}%` }}
           transition={{ duration: 1, ease: "linear" }}
         >
-          <div
-            className="w-px h-full"
-            style={{ background: "rgba(255,255,255,0.9)", boxShadow: "0 0 6px white, 0 0 12px rgba(255,255,255,0.5)" }}
-          />
-          <div
-            className="absolute -top-1 w-2 h-2 rounded-full bg-white"
-            style={{ boxShadow: "0 0 8px white, 0 0 16px rgba(255,255,255,0.5)" }}
-          />
+          <div className="w-px h-full" style={{ background: "rgba(255,255,255,0.8)", boxShadow: "0 0 5px rgba(255,255,255,0.5)" }} />
+          <div className="absolute -top-0.5 w-1.5 h-1.5 rounded-full bg-white" style={{ boxShadow: "0 0 6px white" }} />
         </motion.div>
       </div>
 
       {/* Time labels */}
       <div className="flex justify-between mb-4 px-px">
         {["05", "09", "13", "17", "21", "01"].map(t => (
-          <span key={t} className="font-mono text-[7px] text-[#1e3040] tracking-widest">{t}:00</span>
+          <span key={t} style={{ fontFamily: "'Inter', sans-serif", fontWeight: 300, fontSize: "0.55rem", color: "rgba(255,255,255,0.12)", letterSpacing: "0.05em" }}>
+            {t}:00
+          </span>
         ))}
       </div>
 
-      {/* ── Phase info + stats ── */}
+      {/* Phase info + stats */}
       <div className="flex items-start gap-6">
         <div className="flex-1 min-w-0">
           <AnimatePresence mode="wait">
             <motion.div
               key={phase.id}
-              initial={{ opacity: 0, y: 6 }}
+              initial={{ opacity: 0, y: 5 }}
               animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -6 }}
+              exit={{ opacity: 0, y: -5 }}
               transition={{ duration: 0.35 }}
             >
-              <div
-                className="font-mono text-sm font-bold tracking-[0.15em] mb-1"
-                style={{ color: phase.color, textShadow: `0 0 20px ${phase.color}55` }}
-              >
+              <div style={{
+                fontFamily: "'Cormorant Garamond', serif", fontWeight: 300, fontSize: "1.15rem",
+                color: phase.color, textShadow: `0 0 16px ${phase.color}44`,
+                letterSpacing: "0.06em", marginBottom: "0.35rem",
+              }}>
                 {phase.name}
               </div>
-              <div className="font-mono text-[10px] text-[#55677a] leading-relaxed tracking-wide">
+              <div style={{ fontFamily: "'Inter', sans-serif", fontWeight: 300, fontSize: "0.68rem", color: "rgba(255,255,255,0.3)", lineHeight: 1.5 }}>
                 {phase.desc}
               </div>
             </motion.div>
           </AnimatePresence>
         </div>
 
-        {/* Right stats */}
-        <div className="shrink-0 flex flex-col gap-2 text-right">
+        <div className="shrink-0 flex flex-col gap-2.5 text-right">
           <div>
-            <div className="font-mono text-[8px] text-[#334455] tracking-[0.2em] mb-0.5">NOW · DO THIS</div>
-            <div
-              className="font-mono text-[10px] font-bold tracking-wider"
-              style={{ color: phase.color }}
-            >
+            <div style={{ fontFamily: "'Inter', sans-serif", fontWeight: 300, fontSize: "0.55rem", letterSpacing: "0.1em", color: "rgba(255,255,255,0.2)", textTransform: "uppercase", marginBottom: "0.2rem" }}>
+              do this now
+            </div>
+            <div style={{ fontFamily: "'Inter', sans-serif", fontWeight: 400, fontSize: "0.68rem", color: phase.color, letterSpacing: "0.03em" }}>
               {phase.action}
             </div>
           </div>
 
-          {/* Caffeine effective level */}
           {caffeineLevel > 0 && (
             <div>
-              <div className="font-mono text-[8px] text-[#334455] tracking-[0.2em] mb-0.5">CAFFEINE LOAD</div>
-              <div
-                className="font-mono text-[10px] font-bold tracking-wider"
-                style={{ color: CAFFEINE_COLORS[effectiveCaffeine] }}
-              >
+              <div style={{ fontFamily: "'Inter', sans-serif", fontWeight: 300, fontSize: "0.55rem", letterSpacing: "0.1em", color: "rgba(255,255,255,0.2)", textTransform: "uppercase", marginBottom: "0.2rem" }}>
+                caffeine
+              </div>
+              <div style={{ fontFamily: "'Inter', sans-serif", fontWeight: 300, fontSize: "0.68rem", color: CAFFEINE_COLORS[effectiveCaffeine] }}>
                 {CAFFEINE_LABELS[effectiveCaffeine]}
                 {effectiveCaffeine < caffeineLevel && (
-                  <span className="text-[8px] text-[#334455] ml-1">(decaying)</span>
+                  <span style={{ fontSize: "0.55rem", color: "rgba(255,255,255,0.2)", marginLeft: "0.3rem" }}>decaying</span>
                 )}
               </div>
             </div>
           )}
 
-          {/* HRV if logged */}
           {hrv !== null && (
             <div>
-              <div className="font-mono text-[8px] text-[#334455] tracking-[0.2em] mb-0.5">HRV</div>
-              <div
-                className="font-mono text-[10px] font-bold tracking-wider"
-                style={{ color: hrv > 70 ? "#00ff88" : hrv > 50 ? "#ffaa00" : "#ff3366" }}
-              >
+              <div style={{ fontFamily: "'Inter', sans-serif", fontWeight: 300, fontSize: "0.55rem", letterSpacing: "0.1em", color: "rgba(255,255,255,0.2)", textTransform: "uppercase", marginBottom: "0.2rem" }}>
+                HRV
+              </div>
+              <div style={{ fontFamily: "'Inter', sans-serif", fontWeight: 300, fontSize: "0.68rem", color: hrv > 70 ? "#4dd0c4" : hrv > 50 ? "#d4956b" : "#c46b7a" }}>
                 {hrv}ms
               </div>
             </div>
