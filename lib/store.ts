@@ -236,13 +236,26 @@ export const useHealthStore = create<HealthState>()(
 
       completeOnboarding: (profile: UserProfile) => {
         set((s) => {
+          const hydrationTarget = calcHydrationTargetL(profile);
+          // Seed sensible baseline scores so dashboard isn't all-critical on day 1.
+          // These represent "average person, no data yet logged today."
           const base = {
             ...s,
             isOnboarded: true,
             profile,
-            hydrationTargetL: calcHydrationTargetL(profile),
+            hydrationTargetL: hydrationTarget,
             weight: profile.weightKg,
             weightHistory: [{ date: todayStr(), value: profile.weightKg }],
+            // Seed baselines — will be overwritten on first log
+            sleep: 65,
+            recovery: 62,
+            hydration: 0,        // genuinely 0 until they log water
+            nutrition: 55,
+            movement: 50,
+            energy: 60,
+            focus: 63,
+            stress: 60,
+            hydrationLitres: 0,
           };
           const scores = computeScores(base);
           return { ...base, ...scores };
