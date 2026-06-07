@@ -43,7 +43,7 @@ export default function NutritionProtocol() {
     return h + m / 60;
   })() : 7;
 
-  const window     = calcEatingWindow(profile, wakeHour);
+  const eatWin     = calcEatingWindow(profile, wakeHour);
   const timings    = getMealTimings(profile, wakeHour);
   const sources    = getProteinSources(profile);
   const allergyComps = ALLERGY_COMPENSATIONS.filter(a => profile.allergies.includes(a.allergy));
@@ -56,9 +56,9 @@ export default function NutritionProtocol() {
     return (h + m / 60) > now;
   });
 
-  const windowOpen = now >= window.openH && now < window.closeH;
-  const hoursUntilOpen = !windowOpen && now < window.openH ? window.openH - now : 0;
-  const hoursUntilClose = windowOpen ? window.closeH - now : 0;
+  const windowOpen = now >= eatWin.openH && now < eatWin.closeH;
+  const hoursUntilOpen = !windowOpen && now < eatWin.openH ? eatWin.openH - now : 0;
+  const hoursUntilClose = windowOpen ? eatWin.closeH - now : 0;
 
   const lastMealTs = todayMeals.length > 0 ? Math.max(...todayMeals.map(m => m.timestamp)) : null;
   const hoursFasted = lastMealTs ? (Date.now() - lastMealTs) / 3_600_000 : null;
@@ -119,16 +119,16 @@ export default function NutritionProtocol() {
             letterSpacing: "0.04em", marginBottom: "0.2rem",
             color: windowOpen ? "#4dd0c4" : "rgba(255,255,255,0.35)",
           }}>
-            {fmtH(window.openH)} — {fmtH(window.closeH)}
+            {fmtH(eatWin.openH)} — {fmtH(eatWin.closeH)}
           </div>
           <div style={{ fontFamily: "'Inter', sans-serif", fontWeight: 300, fontSize: "0.6rem", color: "rgba(255,255,255,0.2)", marginBottom: "0.6rem" }}>
-            {window.windowH}h window
+            {eatWin.windowH}h window
           </div>
 
           <div className="relative h-1 rounded-full mb-2" style={{ background: "rgba(255,255,255,0.05)" }}>
             <div className="absolute h-full rounded-full" style={{
-              left: `${(window.openH / 24) * 100}%`,
-              width: `${(window.windowH / 24) * 100}%`,
+              left: `${(eatWin.openH / 24) * 100}%`,
+              width: `${(eatWin.windowH / 24) * 100}%`,
               background: windowOpen ? "rgba(77,208,196,0.5)" : "rgba(155,127,212,0.3)",
             }} />
             <div className="absolute top-1/2 -translate-y-1/2 w-1.5 h-1.5 rounded-full bg-white" style={{
@@ -149,7 +149,7 @@ export default function NutritionProtocol() {
             </div>
           )}
           <div style={{ fontFamily: "'Inter', sans-serif", fontWeight: 300, fontSize: "0.6rem", color: "rgba(255,255,255,0.15)", marginTop: "0.5rem", lineHeight: 1.5 }}>
-            {window.note}
+            {eatWin.note}
           </div>
         </div>
 
